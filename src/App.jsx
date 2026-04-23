@@ -5,226 +5,155 @@ const CCS_YELLOW = "#FFD91B";
 const CCS_BLACK = "#02070D";
 const CCS_GREY = "#475569";
 
-// Status colours (lung cancer screening focus)
+// Status colours (colorectal screening focus)
 const STATUS_COLOURS = {
   organized: "#16a34a", // green
   pilot: "#f59e0b",     // amber
   none: "#dc2626"       // red
 };
 
-
-const screeningTypes = ["Breast", "Cervical", "Colorectal", "Lung"];
-
-
-/* ========== DATA ========== */
-
-
-const provinces = {
+/* =====================================================
+   DATA — COLORECTAL CANCER SCREENING (PUBLIC‑READY)
+   Notes:
+   • All provinces operate organized colorectal screening for average‑risk adults.
+   • Most programs currently invite people ages 50–74.
+   • The Canadian Cancer Society recommends lowering the start age to 45.
+   ===================================================== */
+const jurisdictions = {
   "British Columbia": {
-    lungStatus: "pilot",
-    intro:
-      "British Columbia delivers strong, population-based screening for breast, cervical, and colorectal cancers. Lung cancer screening remains limited to pilot initiatives.",
-    programs: {
-      Breast: "Organized provincial program",
-      Cervical: "Organized – HPV primary screening",
-      Colorectal: "Organized – FIT",
-      Lung: "High-risk pilots only"
-    },
+    status: "organized",
+    ages: "50–74 (CCS recommends starting at 45)",
+    test: "Fecal Immunochemical Test (FIT) every 2 years",
     advocacy:
-      "Expanding lung cancer screening into a fully organized, province-wide program represents a critical opportunity to reduce preventable deaths and advance equity in British Columbia."
+      "Lowering the start age for average‑risk screening to 45 would improve early detection and better reflect rising rates of colorectal cancer in younger adults."
   },
   Alberta: {
-    lungStatus: "none",
-    intro:
-      "Alberta operates organized screening programs for breast, cervical, and colorectal cancer but does not yet offer population-based lung cancer screening.",
-    programs: {
-      Breast: "Organized provincial program",
-      Cervical: "Organized program",
-      Colorectal: "Organized program",
-      Lung: "No organized program"
-    },
+    status: "organized",
+    ages: "50–74 (CCS recommends starting at 45)",
+    test: "FIT every 1–2 years",
     advocacy:
-      "Implementing organized lung cancer screening would align Alberta with emerging best practice and save lives."
+      "Expanding eligibility to include people aged 45–49 would strengthen Alberta’s prevention efforts and align with emerging evidence."
   },
   Saskatchewan: {
-    lungStatus: "none",
-    intro:
-      "Saskatchewan offers organized screening for breast, cervical, and colorectal cancers. Lung cancer screening is not yet organized provincially.",
-    programs: {
-      Breast: "Organized program",
-      Cervical: "Organized program",
-      Colorectal: "Organized program",
-      Lung: "No organized program"
-    },
+    status: "organized",
+    ages: "50–74 (CCS recommends starting at 45)",
+    test: "FIT every 2 years",
     advocacy:
-      "Introducing organized lung cancer screening would address a major gap in Saskatchewan’s cancer prevention system."
+      "Earlier screening would help address increasing colorectal cancer incidence among younger adults in Saskatchewan."
   },
   Manitoba: {
-    lungStatus: "none",
-    intro:
-      "Manitoba maintains organized screening for breast, cervical, and colorectal cancers, with no province-wide lung cancer screening program.",
-    programs: {
-      Breast: "Organized program",
-      Cervical: "Organized program",
-      Colorectal: "Organized program",
-      Lung: "No organized program"
-    },
+    status: "organized",
+    ages: "50–74 (CCS recommends starting at 45)",
+    test: "FIT every 2 years",
     advocacy:
-      "Manitoba has an opportunity to reduce late-stage lung cancer diagnoses by investing in organized screening."
+      "Manitoba could reduce late‑stage diagnoses by lowering the screening start age in line with CCS recommendations."
   },
   Ontario: {
-    lungStatus: "organized",
-    intro:
-      "Ontario operates organized screening across all four major cancer sites, including lung cancer screening for high-risk populations.",
-    programs: {
-      Breast: "Organized provincial program",
-      Cervical: "Organized program",
-      Colorectal: "Organized program",
-      Lung: "Organized high-risk program"
-    },
+    status: "organized",
+    ages: "50–74 (CCS recommends starting at 45)",
+    test: "FIT every 2 years",
     advocacy:
-      "Ontario should sustain leadership in lung screening while continuing to close persistent participation gaps among underserved communities."
+      "Ontario’s organized program provides a strong foundation for expanding screening to younger, average‑risk adults."
   },
   Quebec: {
-    lungStatus: "none",
-    intro:
-      "Quebec offers organized breast and colorectal screening, with cervical screening delivered through mixed and evolving approaches. Lung cancer screening is not yet organized provincially.",
-    programs: {
-      Breast: "Organized program",
-      Cervical: "Partially organized",
-      Colorectal: "Organized program",
-      Lung: "No organized program"
-    },
+    status: "organized",
+    ages: "50–74 (CCS recommends starting at 45)",
+    test: "FIT / FOBT every 2 years",
     advocacy:
-      "Expanding organized screening—particularly for lung cancer—would strengthen prevention and early detection in Quebec."
+      "Lowering the screening start age would support earlier detection and help reduce preventable colorectal cancer deaths in Quebec."
   },
   "Atlantic Canada": {
-    lungStatus: "pilot",
-    intro:
-      "Atlantic provinces operate organized breast, cervical, and colorectal screening programs, while lung cancer screening remains limited and uneven.",
-    programs: {
-      Breast: "Organized programs",
-      Cervical: "Organized programs",
-      Colorectal: "Organized programs",
-      Lung: "Limited pilots / emerging programs"
-    },
+    status: "organized",
+    ages: "50–74 (CCS recommends starting at 45)",
+    test: "FIT every 2 years",
     advocacy:
-      "Coordinated, region-wide lung cancer screening would improve consistency and equity across Atlantic Canada."
+      "A coordinated regional shift to begin screening at age 45 would improve consistency and equity across Atlantic Canada."
   },
   "Northern Canada": {
-    lungStatus: "none",
-    intro:
-      "In the territories, access to organized screening is shaped by geography, infrastructure, and interjurisdictional delivery models.",
-    programs: {
-      Breast: "Limited access",
-      Cervical: "Limited access",
-      Colorectal: "Limited access",
-      Lung: "No organized program"
-    },
+    status: "none",
+    ages: "No population‑based program",
+    test: "Opportunistic screening",
     advocacy:
-      "Improving culturally safe and accessible screening in northern and remote communities must be a national priority."
+      "Developing accessible, organized colorectal screening in northern and remote communities is essential to advancing equity nationwide."
   }
 };
 
-/* ========== APP ========== */
-
-
+/* ================= APP ================= */
 export default function App() {
-  const [activeProvince, setActiveProvince] = useState("British Columbia");
-  const data = provinces[activeProvince];
-
+  const [active, setActive] = useState("British Columbia");
+  const data = jurisdictions[active];
   return (
     <div style={{ fontFamily: "Arial, sans-serif", color: CCS_BLACK }}>
       {/* Hero */}
       <header style={{ background: CCS_YELLOW, padding: "56px 24px" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
           <h1 style={{ fontSize: 44, marginBottom: 12 }}>
-            Cancer Screening in Canada
+            Colorectal Cancer Screening in Canada
           </h1>
-          <p style={{ fontSize: 20, maxWidth: 800 }}>
-            Organized cancer screening saves lives — but access, quality, and
-            consistency still depend on where you live.
+          <p style={{ fontSize: 20, maxWidth: 820 }}>
+            Organized colorectal cancer screening saves lives — but most
+            programs still begin at age 50, despite rising cancer rates among
+            younger adults.
           </p>
         </div>
       </header>
 
+
       {/* National framing + map */}
       <section style={{ maxWidth: 1100, margin: "0 auto", padding: "32px 24px" }}>
-        <p style={{ color: CCS_GREY, maxWidth: 820, marginBottom: 12 }}>
-          Across Canada, screening for breast, cervical, and colorectal cancer
-          is well established. By contrast, organized lung cancer screening
-          remains uneven and limited.
+        <p style={{ color: CCS_GREY, maxWidth: 900 }}>
+          Across Canada, organized colorectal cancer screening programs exist
+          for average‑risk adults. However, the current starting age of most
+          programs is 50, while evidence shows increasing incidence among
+          people aged 45–49.
         </p>
 
-        <LungLegend />
-        <CanadaSVGMap
-          active={activeProvince}
-          onSelect={setActiveProvince}
-        />
+        <StatusLegend />
+        <CanadaPoliticalMap active={active} onSelect={setActive} />
       </section>
 
-
-      {/* Content */}
+      {/* Detail panel */}
       <main style={{ maxWidth: 1100, margin: "0 auto", padding: "24px" }}>
         <section style={{ marginBottom: 36 }}>
-          <h2>{activeProvince}</h2>
-          <p style={{ maxWidth: 920 }}>{data.intro}</p>
-        </section>
-
-        <section style={{ marginBottom: 48 }}>
-          <h3>Current screening programs</h3>
-          {screeningTypes.map((type) => (
-            <div key={type} style={{ marginBottom: 18 }}>
-              <strong>{type} cancer</strong>
-              <div>{data.programs[type]}</div>
-            </div>
-          ))}
+          <h2>{active}</h2>
+          <p><strong>Current eligibility:</strong> {data.ages}</p>
+          <p><strong>Screening test:</strong> {data.test}</p>
         </section>
 
         <section
-          style={{
-            borderLeft: `6px solid ${CCS_YELLOW}`,
-            paddingLeft: 24
-          }}
+          style={{ borderLeft: `6px solid ${CCS_YELLOW}`, paddingLeft: 24 }}
         >
           <h3>What needs to change</h3>
           <p>{data.advocacy}</p>
         </section>
       </main>
 
-      {/* About / transparency */}
+
+      {/* Transparency */}
       <section
-        style={{
-          marginTop: 64,
-          padding: "32px 24px",
-          background: "#f8fafc"
-        }}
+        style={{ marginTop: 64, padding: "32px 24px", background: "#f8fafc" }}
       >
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
           <h3>About this site</h3>
           <p style={{ maxWidth: 900 }}>
-            This interactive briefing summarizes publicly available information
-            on provincial cancer screening programs in Canada. Program
-            descriptions reflect high-level status (such as organized programs,
-            pilot initiatives, or absence of organized screening) rather than
-            detailed eligibility criteria.
+            This site summarizes publicly available information on provincial
+            colorectal cancer screening programs for people at average risk.
+            Program details are presented at a high level and may evolve over
+            time. The Canadian Cancer Society recommends lowering the starting
+            age for organized screening to 45.
           </p>
-          <p style={{ maxWidth: 900 }}>
-            Cancer screening approaches evolve over time. This site is intended
-            to support public understanding and evidence-informed discussion
-            about cancer prevention and early detection in Canada.
-          </p>
-          <p style={{ marginTop: 16, fontSize: 14, color: CCS_GREY }}>
+          <p style={{ fontSize: 14, color: CCS_GREY }}>
             Last updated: April 2026
           </p>
         </div>
       </section>
+
+
       <footer style={{ padding: 36, background: "#f1f5f9" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto", fontSize: 14 }}>
           <p>
-            Public advocacy microsite highlighting provincial cancer screening
-            programs in Canada. Content reflects publicly available information
-            and emphasizes equity-oriented policy priorities.
+            Public advocacy microsite focused on colorectal cancer screening in
+            Canada.
           </p>
         </div>
       </footer>
@@ -232,14 +161,11 @@ export default function App() {
   );
 }
 
-/* ========== LEGEND ========== */
-
-
-function LungLegend() {
+/* ================= LEGEND ================= */
+function StatusLegend() {
   return (
     <div style={{ display: "flex", gap: 16, margin: "12px 0 24px" }}>
-      <LegendItem colour={STATUS_COLOURS.organized} label="Organized" />
-      <LegendItem colour={STATUS_COLOURS.pilot} label="Pilot / limited" />
+      <LegendItem colour={STATUS_COLOURS.organized} label="Organized program" />
       <LegendItem colour={STATUS_COLOURS.none} label="No organized program" />
     </div>
   );
@@ -250,25 +176,16 @@ function LegendItem({ colour, label }) {
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
       <span
-        style={{
-          width: 12,
-          height: 12,
-          borderRadius: "50%",
-          background: colour
-        }}
+        style={{ width: 12, height: 12, borderRadius: "50%", background: colour }}
       />
       <span style={{ fontSize: 14 }}>{label}</span>
     </div>
   );
 }
 
-
-/* ========== SVG MAP ========== */
-
-
-function CanadaSVGMap({ active, onSelect }) {
-  const Region = ({ name, x, y, w, h }) => {
-    const status = provinces[name].lungStatus;
+/* ================= POLITICAL MAP ================= */
+function CanadaPoliticalMap({ active, onSelect }) {  const Region = ({ name, x, y, w, h }) => {
+    const status = jurisdictions[name].status;
     return (
       <g onClick={() => onSelect(name)} style={{ cursor: "pointer" }}>
         <rect
@@ -276,10 +193,10 @@ function CanadaSVGMap({ active, onSelect }) {
           y={y}
           width={w}
           height={h}
-          rx="8"
+          rx="6"
           fill={active === name ? CCS_YELLOW : STATUS_COLOURS[status]}
           stroke="#334155"
-          strokeWidth="1.5"
+          strokeWidth="1"
         />
         <text
           x={x + w / 2}
@@ -296,14 +213,8 @@ function CanadaSVGMap({ active, onSelect }) {
     );
   };
 
-
   return (
-    <svg
-      viewBox="0 0 820 200"
-      width="100%"
-      height="auto"
-      aria-label="Map of Canada"
-    >
+    <svg viewBox="0 0 820 200" width="100%" height="auto">
       <Region name="British Columbia" x={10} y={80} w={120} h={60} />
       <Region name="Alberta" x={140} y={80} w={90} h={60} />
       <Region name="Saskatchewan" x={240} y={80} w={90} h={60} />
